@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuraNotes | Premium Interactive Note & Task Suite</title>
+    <!-- Meta description for SEO -->
+    <meta name="description" content="AuraNotes is a premium, feature-rich note and todo task manager built with high-fidelity glassmorphism, 3D card tilt animation physics, custom text editor components, and revision control snapshots." />
+    <style>
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background: linear-gradient(140deg, #f7fbff 0%, #eefbf8 45%, #f3f8ff 100%);
+      }
+
+      html.dark, html.dark body {
+        background: linear-gradient(140deg, #091317 0%, #10192a 45%, #0c1f24 100%);
+      }
+
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: linear-gradient(140deg, rgba(247,251,255,0.96) 0%, rgba(235,249,246,0.96) 45%, rgba(240,246,255,0.96) 100%);
+      }
+
+      .dark #boot-splash {
+        background: linear-gradient(140deg, rgba(9,19,23,0.98) 0%, rgba(16,25,42,0.98) 45%, rgba(12,31,36,0.98) 100%);
+      }
+
+      #boot-splash::before,
+      #boot-splash::after {
+        content: '';
+        position: absolute;
+        width: 34vmax;
+        height: 34vmax;
+        border-radius: 9999px;
+        filter: blur(80px);
+        opacity: 0.7;
+        animation: bootFloat 9s ease-in-out infinite alternate;
+      }
+
+      #boot-splash::before {
+        background: rgba(20,184,166,0.22);
+        top: -8vmax;
+        left: -10vmax;
+      }
+
+      #boot-splash::after {
+        background: rgba(14,165,233,0.18);
+        right: -8vmax;
+        bottom: -10vmax;
+        animation-delay: -3s;
+      }
+
+      @keyframes bootFloat {
+        from { transform: translate3d(0, 0, 0) scale(1); }
+        to { transform: translate3d(0, -20px, 0) scale(1.08); }
+      }
+
+      .boot-card {
+        position: relative;
+        z-index: 1;
+        padding: 28px 30px;
+        border-radius: 28px;
+        border: 1px solid rgba(148,163,184,0.22);
+        background: rgba(255,255,255,0.58);
+        backdrop-filter: blur(20px) saturate(160%);
+        box-shadow: 0 24px 80px rgba(15,23,42,0.12);
+      }
+
+      .dark .boot-card {
+        background: rgba(17,25,30,0.62);
+        box-shadow: 0 24px 80px rgba(0,0,0,0.42);
+      }
+
+      .boot-ring {
+        width: 72px;
+        height: 72px;
+        border-radius: 9999px;
+        border: 4px solid rgba(148,163,184,0.18);
+        border-top-color: #14b8a6;
+        border-right-color: #0ea5e9;
+        animation: bootSpin 1.1s linear infinite;
+        margin: 0 auto 14px;
+      }
+
+      @keyframes bootSpin {
+        to { transform: rotate(360deg); }
+      }
+
+      .boot-title {
+        font: 700 18px/1.2 system-ui, sans-serif;
+        color: #0f172a;
+        text-align: center;
+        margin: 0;
+      }
+
+      .dark .boot-title {
+        color: #e2e8f0;
+      }
+
+      .boot-subtitle {
+        font: 500 13px/1.5 system-ui, sans-serif;
+        color: #64748b;
+        text-align: center;
+        margin: 8px 0 0;
+      }
+
+      .dark .boot-subtitle {
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body class="bg-light-bg dark:bg-dark-bg text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
+    <div id="boot-splash" aria-live="polite" aria-label="Loading AuraNotes">
+      <div class="boot-card">
+        <div class="boot-ring"></div>
+        <p class="boot-title">AuraNotes is loading</p>
+        <p class="boot-subtitle">Preparing your workspace, themes, and notes</p>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
