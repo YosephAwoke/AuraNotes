@@ -342,8 +342,8 @@ const App = () => {
     
     // Position menu at cursor coordinates
     setContextMenu({
-      x: e.clientX,
-      y: e.clientY,
+      x: e.pageX,
+      y: e.pageY,
       note,
     });
   };
@@ -462,6 +462,14 @@ const App = () => {
           
           {/* Controls Bar: Search & View Options */}
           <div className="glass-panel rounded-3xl p-5 md:p-6 border border-slate-200/50 dark:border-slate-800/50 flex flex-col gap-4 shadow-md backdrop-blur-xl">
+            <div className="flex flex-col gap-1 border-b border-slate-200/50 dark:border-slate-800/50 pb-3">
+              <span className="text-[10px] uppercase tracking-[0.28em] text-primary-500 dark:text-primary-300 font-extrabold">
+                Welcome back
+              </span>
+              <h2 className="text-lg md:text-xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+                Hey{user?.username ? `, ${user.username}` : ''}.
+              </h2>
+            </div>
             
             {/* Row 1: Search & Add Note */}
             <div className="flex flex-col sm:flex-row gap-3">
@@ -841,13 +849,12 @@ const App = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="fixed z-50 w-52 glass-panel border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 backdrop-blur-xl flex flex-col gap-1"
+            className="absolute z-50 w-64 glass-panel border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2.5 backdrop-blur-xl flex flex-col gap-1"
             style={{
-              left: `${Math.min(contextMenu.x, window.innerWidth - 220)}px`,
-              top: `${Math.min(contextMenu.y, window.innerHeight - 300)}px`,
+              left: `${Math.min(contextMenu.x, window.scrollX + window.innerWidth - 252)}px`,
+              top: `${Math.min(contextMenu.y, window.scrollY + window.innerHeight - 120)}px`,
             }}
           >
-            {/* Open item */}
             <button
               onClick={() => {
                 setActiveNote(contextMenu.note);
@@ -859,7 +866,6 @@ const App = () => {
               Open Space Document
             </button>
 
-            {/* Pin Toggle */}
             <button
               onClick={() => {
                 handleTogglePin(contextMenu.note);
@@ -871,7 +877,6 @@ const App = () => {
               {contextMenu.note.isPinned ? 'Unpin Document' : 'Pin to Top'}
             </button>
 
-            {/* Rename */}
             <button
               onClick={() => startRename(contextMenu.note)}
               className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-left hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
@@ -882,7 +887,6 @@ const App = () => {
 
             <div className="w-full h-[1px] bg-slate-200/50 dark:bg-slate-800 my-1" />
 
-            {/* Category selection */}
             <div className="px-3.5 py-1.5 text-[9px] uppercase tracking-wider text-slate-400 font-extrabold flex items-center gap-1">
               <Layers size={10} /> Change Category
             </div>
@@ -905,11 +909,10 @@ const App = () => {
               ))}
             </div>
 
-            {/* Color selection */}
             <div className="px-3.5 py-1.5 text-[9px] uppercase tracking-wider text-slate-400 font-extrabold flex items-center gap-1 border-t border-slate-150 dark:border-slate-850 pt-2">
               <Palette size={10} /> Color Theme
             </div>
-            <div className="flex items-center gap-1.5 px-3.5 pb-2">
+            <div className="grid grid-cols-6 gap-2 px-3.5 pb-2">
               {colors.map((c) => (
                 <button
                   key={c.value}
@@ -917,7 +920,7 @@ const App = () => {
                     handleQuickUpdateNote(contextMenu.note._id, { color: c.value });
                     setContextMenu(null);
                   }}
-                  className={`w-4.5 h-4.5 rounded-full border transition-transform hover:scale-125 ${
+                  className={`w-5 h-5 rounded-full border transition-transform hover:scale-125 ${
                     contextMenu.note.color === c.value
                       ? 'border-slate-900 dark:border-white scale-110 shadow-sm'
                       : 'border-transparent'
@@ -930,7 +933,6 @@ const App = () => {
 
             <div className="w-full h-[1px] bg-slate-200/50 dark:bg-slate-800 my-1" />
 
-            {/* Delete note */}
             <button
               onClick={() => {
                 handleDeleteNote(contextMenu.note._id);
