@@ -11,9 +11,19 @@ const todoRoutes = require('./routes/todoRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const normalizeOrigin = (value) => {
+  if (!value) return '';
+
+  try {
+    return new URL(value.trim()).origin;
+  } catch (error) {
+    return value.trim().replace(/\/$/, '');
+  }
+};
+
 const allowedOrigins = (process.env.CLIENT_URL || '')
   .split(',')
-  .map((origin) => origin.trim())
+  .map(normalizeOrigin)
   .filter(Boolean);
 
 // Connect to MongoDB
@@ -34,7 +44,9 @@ app.use(
         return callback(null, true);
       }
 
-      if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      const requestOrigin = normalizeOrigin(origin);
+
+      if (allowedOrigins.length === 0 || allowedOrigins.includes(requestOrigin)) {
         return callback(null, true);
       }
 
