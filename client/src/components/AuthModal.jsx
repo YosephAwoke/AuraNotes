@@ -108,7 +108,7 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="mb-4 p-3 rounded-xl bg-cyber-rose/10 border border-cyber-rose/20 text-cyber-rose text-xs font-semibold text-center"
+              className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-500/15 border border-rose-200 dark:border-rose-400/30 text-rose-700 dark:text-rose-200 text-xs font-semibold text-center shadow-sm"
             >
               {error}
             </motion.div>

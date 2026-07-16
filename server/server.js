@@ -11,6 +11,11 @@ const todoRoutes = require('./routes/todoRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/noteapp')
@@ -22,7 +27,22 @@ mongoose
   });
 
 // Middlewares
-app.use(cors()); // Allow cross-origin requests from front-end
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error('CORS not allowed for this origin'));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json()); // Body parser for JSON content
 app.use(morgan('dev')); // Dev logger
 
