@@ -62,6 +62,14 @@ app.use(express.json()); // Body parser for JSON content
 app.use(morgan('dev')); // Dev logger
 
 // Base API route
+// Render uses this endpoint to verify that the process is listening.
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'AuraNotes API is running',
+  });
+});
+
 app.get('/api/health', (req, res) => {
   const databaseConnected = mongoose.connection.readyState === 1;
 
