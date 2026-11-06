@@ -57,7 +57,7 @@ Create a `.env` file in `server/` with your environment values, for example:
 
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
+MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 ```
 
@@ -66,6 +66,12 @@ Start the API:
 ```bash
 npm run dev
 ```
+
+For a deployed server, set `MONGODB_URI`, `JWT_SECRET`, and `CLIENT_URL` in the
+hosting provider's environment settings. The MongoDB deployment must also allow
+connections from the hosting provider (for example, through its IP access-list
+settings). Check `/api/health`; a `degraded` response with
+`"database":"unavailable"` means the server is running but cannot reach MongoDB.
 
 ### 3. Set up the client
 

@@ -10,6 +10,7 @@ const todoRoutes = require('./routes/todoRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/noteapp';
 
 const normalizeOrigin = (value) => {
   if (!value) return '';
@@ -28,7 +29,9 @@ const allowedOrigins = (process.env.CLIENT_URL || '')
 
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/noteapp')
+  .connect(mongoUri, {
+    serverSelectionTimeoutMS: 5000,
+  })
   .then(() => {
     console.log('MongoDB successfully connected.');
   })
@@ -60,11 +63,28 @@ app.use(morgan('dev')); // Dev logger
 
 // Base API route
 app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    message: 'Premium Note App API is fully operational',
+  const databaseConnected = mongoose.connection.readyState === 1;
+
+  res.status(databaseConnected ? 200 : 503).json({
+    status: databaseConnected ? 'healthy' : 'degraded',
+    database: databaseConnected ? 'connected' : 'unavailable',
+    message: databaseConnected
+      ? 'Premium Note App API is fully operational'
+      : 'API is running but the database is unavailable',
     timestamp: new Date(),
   });
+});
+
+// Database-backed routes should fail quickly when MongoDB is unavailable instead
+// of waiting for Mongoose's query buffer to time out.
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      message: 'Database is temporarily unavailable. Please try again shortly.',
+    });
+  }
+
+  next();
 });
 
 // Routes middleware
